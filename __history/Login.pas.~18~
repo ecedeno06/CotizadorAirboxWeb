@@ -1,0 +1,219 @@
+unit Login;
+
+interface
+
+uses
+
+  Classes, SysUtils, IWAppForm, IWApplication, IWColor, IWTypes,
+  IWCompGradButton, IWVCLBaseControl, IWBaseControl, IWBaseHTMLControl,
+  IWControl, IWCompLabel, iwLabel, Vcl.Controls, Vcl.Forms, IWVCLBaseContainer,
+  IWContainer, IWHTMLContainer, IWHTML40Container, IWRegion, IWCompEdit,
+  IWHTMLControls, Vcl.Imaging.jpeg, IWCompExtCtrls, IniFiles, IWCompGrids,
+  IWDBGrids, Data.DB, IdMessage, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient, IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase,
+  IdSMTP, IWCompRectangle, Vcl.Graphics, DateUtils, IWCompListbox,
+  SyncObjs, IWCompMemo,   RPDefine, IWCompText,
+  Vcl.Imaging.pngimage,Windows, IWCompButton, IWAdvMessageDialog,
+  IWTMSBase
+  , IWTMSCtrls
+  , Vcl.Menus
+  , IWAdvRadioGroup, IWDBAdvRadioGroup,
+  IWHTMLEdit, IWDBHTMLEdit, IWScrollPanel, IWDBScrollPanel, IWTMSImgCtrls;
+
+type
+  TfrmLogin = class(TIWAppForm)
+    msgLogin: TTIWAdvMessageDialog;
+    rgLogin: TIWRegion;
+    IWLabel1: TIWLabel;
+    IWLabel2: TIWLabel;
+    edUsuario: TTIWAdvEdit;
+    edClave: TTIWAdvEdit;
+    DataSource1: TDataSource;
+    memo1: TIWMemo;
+    IWImage1: TIWImage;
+    btnCotNew: TIWGradButton;
+    IWGradButton1: TIWGradButton;
+    procedure IWAppFormCreate(Sender: TObject);
+    function EncryptPW(const PW : OpenString): string;
+    procedure Entrar;
+    procedure Salir;
+    procedure bnInicioClick(Sender: TObject);
+    procedure edUsuarioSubmit(Sender: TObject);
+    procedure edclaveSubmit(Sender: TObject);
+    procedure IWButton1AsyncClick(Sender: TObject; EventParams: TStringList);
+    procedure IWButton2Click(Sender: TObject);
+    procedure btnCotNewClick(Sender: TObject);
+    procedure IWGradButton1Click(Sender: TObject);
+  private
+     procedure Move(AFormClass: TIWAppFormClass);
+  public
+  end;
+Var
+  Clave: Array[0..10] of Char;
+  UserName: String;
+  g_c_rave_critical_section: TCriticalSection= Nil;
+  i: Integer;
+  Opcion: String;
+
+implementation
+{$R *.dfm}
+
+uses UserSessionUnit, IWGlobal, ServerController, TopFrame, Cotizador;
+
+
+function obtenerFechasFichero (const FileName: string; var Created: TDateTime;
+         var Accessed: TDateTime; var Modified: TDateTime): Boolean;
+var
+  h: THandle;
+  Info1, Info2, Info3: TFileTime;
+  SysTimeStruct: SYSTEMTIME;
+  TimeZoneInfo: TTimeZoneInformation;
+  Bias: Double;
+begin
+  Result := False;
+  Bias   := 0;
+  h      := FileOpen(FileName, fmOpenRead or fmShareDenyNone);
+  if h > 0 then
+  begin
+    try
+      if GetTimeZoneInformation(TimeZoneInfo) <> $FFFFFFFF then
+        Bias := TimeZoneInfo.Bias / 1440; // 60x24
+      GetFileTime(h, @Info1, @Info2, @Info3);
+      if FileTimeToSystemTime(Info1, SysTimeStruct) then
+        Created := SystemTimeToDateTime(SysTimeStruct) - Bias;
+      if FileTimeToSystemTime(Info2, SysTimeStruct) then
+        Accessed := SystemTimeToDateTime(SysTimeStruct) - Bias;
+      if FileTimeToSystemTime(Info3, SysTimeStruct) then
+        Modified := SystemTimeToDateTime(SysTimeStruct) - Bias;
+      Result := True;
+    finally
+      FileClose(h);
+    end;
+  end;
+end;
+procedure TfrmLogin.Move(AFormClass: TIWAppFormClass);
+begin
+  // Release the current form
+  TIWAppForm(WebApplication.ActiveForm).Release;
+  // Create the next form
+  AFormClass.Create(WebApplication).Show;
+end;
+procedure TfrmLogin.Salir;
+begin
+   WebApplication.TerminateAndRedirect('http:\\www.silaba.com');
+end;
+
+procedure TfrmLogin.IWAppFormCreate(Sender: TObject);
+Var
+   i: Integer;
+   Opcion: String;
+begin
+   edUsuario.Text := '';
+   edClave.Text := '';
+   ActiveControl := edUsuario;
+  // Stylesheet.Filename := WebApplication.ApplicationPath+'files\Estilos.css';
+end;
+
+procedure TfrmLogin.IWButton1AsyncClick(Sender: TObject;
+  EventParams: TStringList);
+begin
+   WebApplication.Terminate('Ha cerrado su sesión... ');
+end;
+
+procedure TfrmLogin.IWButton2Click(Sender: TObject);
+begin
+   Entrar;
+end;
+
+procedure TfrmLogin.IWGradButton1Click(Sender: TObject);
+begin
+   WebApplication.TerminateAndRedirect('https://airbox.com.pa/') ;
+end;
+
+procedure TfrmLogin.bnInicioClick(Sender: TObject);
+begin
+   Entrar;
+end;
+
+procedure TfrmLogin.btnCotNewClick(Sender: TObject);
+begin
+  Entrar;
+end;
+
+procedure TfrmLogin.edclaveSubmit(Sender: TObject);
+begin
+   Entrar;
+end;
+
+procedure TfrmLogin.edUsuarioSubmit(Sender: TObject);
+begin
+    ActiveControl := edClave;
+end;
+
+function TfrmLogin.EncryptPW;
+var
+  I : shortint;
+begin
+  {$IFDEF WIN32}
+    SetLength(Result, Length(PW));
+  {$ELSE}
+    Result[0] := Char(Length(PW));
+  {$ENDIF}
+  for I := 1 to Length(PW) do
+    Result[I] := char(shortint(PW[I]) or 128);
+end;
+
+procedure TfrmLogin.Entrar;
+var
+  major, minor, release, build, atributos : word;
+  version, Modificacion, modi,dir : string;
+  sizeFichero : Longint;
+  fechaCreacion, ultimoAcceso, ultimaModificacion: TDateTime;
+  i: Integer;
+begin
+//  CargaOpciones;
+  dir:=ExtractFileName('PrinciWeb.Exe');
+  webapplication.Showmessage(dir);
+  if FileExists(dir) then
+  begin
+     //versionFichero(dir,major,minor,release, build);
+     version := Format('%d.%d.%d.%d', [Major, Minor, Release, Build]);
+
+     obtenerFechasFichero (dir, fechaCreacion, ultimoAcceso, ultimaModificacion);
+     Modificacion:=DateToStr(ultimaModificacion);//    end;
+  end;
+  UserName := edUsuario.Text;
+ // clave    := edclave.Text;
+  //StrpCopy(Clave, EncryptPW(Uppercase(edClave.text)));
+
+ {Select * from TicketsUSR
+where 1=2
+}
+  coma := char(39);
+  UserSession.tblLoginUser.Close;
+  UserSession.tblLoginUser.Sql.Clear;
+  UserSession.tblLoginUser.Sql.Add('select * from TicketsUSR');
+  UserSession.tblLoginUser.Sql.Add(' Where upper(Usuario) = ' + coma + Uppercase(UserName) + coma );
+  UserSession.tblLoginUser.Sql.Add(' and Clave = ' + coma + edclave.Text + coma);
+  memo1.Text :=  UserSession.tblLoginUser.Sql.text;
+  UserSession.tblLoginUser.Open;
+  if not UserSession.tblLoginUser.Eof then
+  begin
+     UserSession.tblDefaults.Close;
+     UserSession.tblDefaults.Open;
+     UserSession.tblDefaults.Append;
+     UserSession.tblDefaultsUsuario.AsString      := Uppercase(edUsuario.Text);
+     UserSession.tblDefaultsSucursal.AsString     := UserSession.tblLoginUserSucursal.AsString;
+     Move(TfrmCotizador);
+  end
+  else
+  begin
+     WebApplication.ShowMessage('Usuario o Clave Invalido');
+     ActiveControl := edUsuario;
+  end;
+end;
+
+Initialization
+  TfrmLogin.SetAsMainForm;
+
+end.

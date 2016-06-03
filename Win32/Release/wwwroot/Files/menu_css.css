@@ -1,0 +1,66 @@
+@charset "utf-8";
+/* CSS Document */
+
+#div > STYLEHOLDER_TABINFORME_ACTIVE{
+  z-index: 1;
+  white-space: initial !important;
+  overflow: visible !important;
+  height: 26px;
+  width: 1048px;
+  border-bottom: 5px solid #0f71ba !important;
+  margin-top: -10px !important;
+  margin-left: 0px !important;
+  background: #222222;
+  background: -moz-linear-gradient(top, #555555 0%, #222222 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #555555), color-stop(100%, #222222));
+  background: -webkit-linear-gradient(top, #555555 0%, #222222 100%);
+  background: -o-linear-gradient(top, #555555 0%, #222222 100%);
+  background: -ms-linear-gradient(top, #555555 0%, #222222 100%);
+  background: linear-gradient(to bottom, #555555 0%, #222222 100%);
+}
+
+
+#PAGETITLE_IWTABCONTROL1PAGE1{
+	height: 20px;
+  /* padding: 3px; */
+  font-family: arial;
+  padding: 13px;
+  line-height: 23px;
+  color: #fff;
+	}
+
+
+#TABINFORME{
+	  top: 116px
+	}
+
+#STYLEHOLDER_TABINFORME_ACTIVE{
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  font-size: 13px;
+  font-family: Arial, sans-serif, Verdana;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  height: 38px;
+  padding: 11px;
+  border-radius: 5px 5px 0px 0px;
+  background: #0f71ba;
+  background: -moz-linear-gradient(top, #3fa4f0 0%, #0f71ba 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3fa4f0), color-stop(100%, #0f71ba));
+  background: -webkit-linear-gradient(top, #3fa4f0 0%, #0f71ba 100%);
+  background: -o-linear-gradient(top, #3fa4f0 0%, #0f71ba 100%);
+  background: -ms-linear-gradient(top, #3fa4f0 0%, #0f71ba 100%);
+  background: linear-gradient(to bottom, #3fa4f0 0%, #0f71ba 100%);
+		}
+		
+	#STYLEHOLDER_TABINFORME_INACTIVE{
+		
+		}
+		
+#TIWDBADVWEBGRID1_{
+	width: 1046px !important;
+	}
+#TIWDBADVWEBGRID2_{
+	width: 1048px !important;
+	}

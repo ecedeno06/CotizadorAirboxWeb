@@ -1,0 +1,287 @@
+unit UserSessionUnit;
+
+{
+  This is a DataModule where you can add components or declare fields that are specific to 
+  ONE user. Instead of creating global variables, it is better to use this datamodule. You can then
+  access the it using UserSession.
+}
+interface
+
+uses
+  IWUserSessionBase, SysUtils, Classes, Data.DB, Bde.DBTables, Data.Win.ADODB,
+  kbmMemTable;
+
+type
+  TIWUserSession = class(TIWUserSessionBase)
+    AirboxExpress2: TADOConnection;
+    ADOQuery1: TADOQuery;
+    ADOQuery1idPais: TStringField;
+    ADOQuery1idProvincia: TIntegerField;
+    ADOQuery1idDistrito: TIntegerField;
+    ADOQuery1descripcion: TStringField;
+    ADOQuery1idruta: TIntegerField;
+    tblcotizacion: TADOQuery;
+    tblcotizacionid: TAutoIncField;
+    tblcotizacionfecha: TDateTimeField;
+    tblcotizacioncliente: TIntegerField;
+    tblcotizacionpty: TStringField;
+    tblcotizacioncotizadoPor: TStringField;
+    tblcotizacionvigente: TBooleanField;
+    tblcotizaciontelefono: TStringField;
+    tblcotizacioncorreo: TStringField;
+    tblcotizacionnombre: TStringField;
+    tblcotizacionenvioporCorreo: TBooleanField;
+    tblcotizacionenvioImpresion: TBooleanField;
+    tblcotizacionidtarifa: TIntegerField;
+    tblcotizacionidsubTarifa: TIntegerField;
+    tblcotizaciontarifaNombre: TStringField;
+    tblcotizacionsubTarifaNombre: TStringField;
+    tblcotizaciontotalFlete: TBCDField;
+    tblcotizaciontotalFOB: TBCDField;
+    tblcotizaciontotalSeguros: TBCDField;
+    tblcotizaciontotalCIF: TBCDField;
+    tblcotizaciontotalCorredorAduana: TBCDField;
+    tblcotizaciontotalAdicional: TBCDField;
+    tblcotizaciontotalImpuesto: TBCDField;
+    tblcotizaciontotalGeneral: TBCDField;
+    tblcotizacionestatus: TStringField;
+    tblcotizacionFactura: TStringField;
+    tblCotizacionDetalle: TADOQuery;
+    tblTarifaDetalle: TADOQuery;
+    tblTarifaDetalleidpais: TStringField;
+    tblTarifaDetalleidTarifa: TIntegerField;
+    tblTarifaDetalleidsubtarifa: TIntegerField;
+    tblTarifaDetallesec: TAutoIncField;
+    tblTarifaDetallepesoMinimo: TBCDField;
+    tblTarifaDetallepesoInicial: TBCDField;
+    tblTarifaDetallepesoFinal: TBCDField;
+    tblTarifaDetallecobroBaseFEE: TBCDField;
+    tblTarifaDetallecobroExtraRate: TBCDField;
+    tblTarifaDetallepesoBase: TBCDField;
+    tblBuscarCliente: TADOQuery;
+    qryTarifas: TADOQuery;
+    qryTarifasidpais: TStringField;
+    qryTarifasidTarifa: TIntegerField;
+    qryTarifasDescripcion: TStringField;
+    qryTarifasActiva: TBooleanField;
+    qryTarifasdesde: TDateTimeField;
+    qryTarifashasta: TDateTimeField;
+    qryTarifaspesominimo: TBCDField;
+    qryTarifascodigoMailPrice: TStringField;
+    qryTarifaspiezaAdicional: TBCDField;
+    tblTotal: TADOQuery;
+    tblAranceles: TADOQuery;
+    tblArancelesidArancel: TAutoIncField;
+    tblArancelesDescripcion: TStringField;
+    tblArancelesporcentaje: TBCDField;
+    tblArancelesactivo: TBooleanField;
+    tblArancelesInicio: TDateTimeField;
+    tblArancelesFin: TDateTimeField;
+    tblSubTarifa: TADOQuery;
+    tblSubTarifaidsubtarifa: TIntegerField;
+    tblSubTarifanombre: TStringField;
+    tblSubTarifacombustible: TBCDField;
+    tblAduanal: TADOQuery;
+    tblAduanalinicio: TBCDField;
+    tblAduanalFin: TBCDField;
+    tblAduanalvalor: TBCDField;
+    tblAduanaltasa: TBCDField;
+    tblCotizacionDetalle2: TADOQuery;
+    IntegerField1: TIntegerField;
+    AutoIncField1: TAutoIncField;
+    IntegerField2: TIntegerField;
+    IntegerField3: TIntegerField;
+    StringField1: TStringField;
+    BCDField1: TBCDField;
+    BCDField2: TBCDField;
+    BCDField3: TBCDField;
+    BCDField4: TBCDField;
+    BCDField5: TBCDField;
+    BCDField6: TBCDField;
+    BCDField7: TBCDField;
+    BCDField8: TBCDField;
+    BCDField9: TBCDField;
+    IntegerField4: TIntegerField;
+    BCDField10: TBCDField;
+    BCDField11: TBCDField;
+    BCDField12: TBCDField;
+    BCDField13: TBCDField;
+    BCDField14: TBCDField;
+    BCDField15: TBCDField;
+    BCDField16: TBCDField;
+    DateTimeField1: TDateTimeField;
+    StringField2: TStringField;
+    BCDField17: TBCDField;
+    BCDField18: TBCDField;
+    BCDField19: TBCDField;
+    MemoField1: TMemoField;
+    IntegerField5: TIntegerField;
+    IntegerField6: TIntegerField;
+    StringField3: TStringField;
+    BCDField20: TBCDField;
+    tblTotalTotal: TFMTBCDField;
+    MagicNet: TADOConnection;
+    tblTiendas: TADOQuery;
+    tblTiendasid: TAutoIncField;
+    tblTiendastienda: TStringField;
+    tblBuscarCliente3: TADOQuery;
+    tblBuscarCliente3Nombre: TStringField;
+    tblBuscarCliente3TipoCuenta: TStringField;
+    tblBuscarCliente3TipoDocumento: TStringField;
+    tblBuscarCliente3NumeroDocumento: TStringField;
+    tblBuscarCliente3TelOficina: TStringField;
+    tblBuscarCliente3TelCasa: TStringField;
+    tblBuscarCliente3TelCelular: TStringField;
+    tblBuscarCliente3TelFax: TStringField;
+    tblBuscarCliente3Direccion1: TStringField;
+    tblBuscarCliente3Direccion2: TStringField;
+    tblBuscarCliente3Ciudad: TStringField;
+    tblBuscarCliente3Correo: TStringField;
+    tblBuscarCliente3Lenguaje: TStringField;
+    tblBuscarCliente3IdCliente: TIntegerField;
+    tblBuscarCliente3FecIngreso: TDateTimeField;
+    tblBuscarCliente3FIngreso: TStringField;
+    tblBuscarCliente3Clave: TStringField;
+    tblBuscarCliente3counter: TStringField;
+    tblBuscarCliente3direccionfisica: TStringField;
+    tblBuscarCliente3vivepanama: TStringField;
+    tblBuscarCliente3ruta: TStringField;
+    tblBuscarCliente3parada: TStringField;
+    tblBuscarCliente3TipoAccion: TStringField;
+    tblBuscarCliente3FechaModificacion: TStringField;
+    tblBuscarCliente3sms: TStringField;
+    tblBuscarCliente3Departamento: TStringField;
+    tblBuscarCliente3LimitedeCredito: TBCDField;
+    tblBuscarCliente3MontoAduanal: TBCDField;
+    tblBuscarCliente3AlertasdePaquetes: TStringField;
+    tblBuscarCliente3EmailsdePromocion: TStringField;
+    tblBuscarCliente3EstadoCuenta: TStringField;
+    tblBuscarCliente3Registro: TStringField;
+    tblBuscarCliente3UserModificacion: TStringField;
+    tblBuscarCliente3Orden: TStringField;
+    tblBuscarCliente3Zen: TStringField;
+    tblBuscarCliente3Moneda: TStringField;
+    tblBuscarCliente3Estatus: TStringField;
+    tblBuscarCliente3TipoAduana: TStringField;
+    tblBuscarCliente3CicloFacturacion: TStringField;
+    tblBuscarCliente3CargoTarjeta: TStringField;
+    tblBuscarCliente3Prepago: TStringField;
+    tblBuscarCliente3PagSeguro: TStringField;
+    tblBuscarCliente3Deposito: TBCDField;
+    tblBuscarCliente3RegistroWeb: TStringField;
+    tblBuscarCliente3NombreRazon: TStringField;
+    tblBuscarCliente3NumeroRuc: TStringField;
+    tblBuscarCliente3Apoderado: TStringField;
+    tblBuscarCliente3PaisEmisor: TStringField;
+    tblBuscarCliente3sms2: TStringField;
+    tblBuscarCliente3sms3: TStringField;
+    tblBuscarCliente3quienAfilia: TStringField;
+    tblBuscarCliente3quienAutoriza: TStringField;
+    tblBuscarCliente3tipoImpuesto: TStringField;
+    tblBuscarCliente3Promocion: TStringField;
+    tblBuscarCliente3PrimerNombre: TStringField;
+    tblBuscarCliente3SegundoNombre: TStringField;
+    tblBuscarCliente3PrimerApellido: TStringField;
+    tblBuscarCliente3SegundoApellido: TStringField;
+    tblBuscarCliente3ApellidoCasada: TStringField;
+    tblBuscarCliente3UserID: TStringField;
+    tblCotizacionDetalleid: TIntegerField;
+    tblCotizacionDetallesecuencia: TAutoIncField;
+    tblCotizacionDetalleidArancel: TIntegerField;
+    tblCotizacionDetalletipoImpuesto: TIntegerField;
+    tblCotizacionDetallelbKl: TStringField;
+    tblCotizacionDetallepeso: TBCDField;
+    tblCotizacionDetallevFOB: TBCDField;
+    tblCotizacionDetallevAdicional: TBCDField;
+    tblCotizacionDetalleCIF: TBCDField;
+    tblCotizacionDetallevFlete: TBCDField;
+    tblCotizacionDetallevSeguro: TBCDField;
+    tblCotizacionDetallecombustible: TBCDField;
+    tblCotizacionDetalleCorredorAduana: TBCDField;
+    tblCotizacionDetalleimpuetoAduana: TBCDField;
+    tblCotizacionDetalleidOrigen: TIntegerField;
+    tblCotizacionDetalleSED: TBCDField;
+    tblCotizacionDetallemanejoDoc: TBCDField;
+    tblCotizacionDetalleseguro: TBCDField;
+    tblCotizacionDetalleitbm: TBCDField;
+    tblCotizacionDetalleTotalAduana: TBCDField;
+    tblCotizacionDetalleTotalTransporte: TBCDField;
+    tblCotizacionDetalleGranTotal: TBCDField;
+    tblCotizacionDetallefecha: TDateTimeField;
+    tblCotizacionDetallelink: TStringField;
+    tblCotizacionDetallepesoCalculado: TBCDField;
+    tblCotizacionDetallefleteAduana: TBCDField;
+    tblCotizacionDetallearancel: TBCDField;
+    tblCotizacionDetalleObservacion: TMemoField;
+    tblCotizacionDetalleqty: TIntegerField;
+    tblCotizacionDetalletienda: TIntegerField;
+    tblCotizacionDetalletiendaNombre: TStringField;
+    tblCotizacionDetalletasaArancel: TBCDField;
+    AirboxExpress: TADOConnection;
+    kbmCotizacion: TkbmMemTable;
+    kbmCotizacionFECHA: TDateTimeField;
+    kbmCotizacionID: TIntegerField;
+    kbmCotizacionNOMBRE: TStringField;
+    kbmCotizacionPTY: TStringField;
+    kbmCotizacionCORREO: TStringField;
+    kbmCotizacionTELEFONO: TStringField;
+    kbmCotizacionIDTARIFA: TIntegerField;
+    kbmCotizacionIDSUBTARIFA: TIntegerField;
+    kbmCotizacionSUCURSAL: TIntegerField;
+    kbmCotizacionPreparadoPor: TStringField;
+    kbmCotizacionCliente: TIntegerField;
+    tblcotizacionfechaEnvio: TDateTimeField;
+    tblcotizacionenviada: TBooleanField;
+    tblBuscarClienteAirboxDB: TADOQuery;
+    AutoIncField2: TAutoIncField;
+    StringField4: TStringField;
+    StringField5: TStringField;
+    StringField6: TStringField;
+    IntegerField7: TIntegerField;
+    tblBuscarClienteidCliente: TIntegerField;
+    tblBuscarClientenombre: TStringField;
+    tblBuscarClientecorreo: TStringField;
+    tblBuscarClienteTelefono: TStringField;
+    tblBuscarClienteidTarifa: TStringField;
+    tblLoginUser: TADOQuery;
+    tblLoginUserIdUsr: TAutoIncField;
+    tblLoginUserUsuario: TStringField;
+    tblLoginUserClave: TStringField;
+    tblLoginUserNombre: TStringField;
+    tblLoginUseridDepartamento: TIntegerField;
+    tblLoginUserTipoUsuario: TStringField;
+    tblLoginUserEmail: TStringField;
+    tblLoginUserTarjetaCredito: TStringField;
+    tblLoginUserAutorizados: TStringField;
+    tblLoginUserAvanzados: TStringField;
+    tblLoginUserActivo: TStringField;
+    tblLoginUserBlanco: TStringField;
+    tblLoginUserCompras: TStringField;
+    tblLoginUserTickets: TStringField;
+    tblLoginUserSucursal: TIntegerField;
+    tblLoginUserTipoUserTicket: TStringField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+var
+//-----Cotizacion
+xCotizacion,xrow,xfilas: integer;
+coma, xpty : string;
+//-----Detalle Cotizacion
+xSec,CotizacionNUM : string;
+
+xinsert : boolean;
+
+ //--- Cliente
+ vClienteCodigo, vClienteNombre, vClienteApellido, vClienteCia,
+ vClienteTelefono, vClienteCelular ,vClienteCorreo : string;
+ vClienteTax,vAchivoPDF,vSession,vFechaPDF: string;
+
+
+implementation
+
+{$R *.dfm}
+
+end.

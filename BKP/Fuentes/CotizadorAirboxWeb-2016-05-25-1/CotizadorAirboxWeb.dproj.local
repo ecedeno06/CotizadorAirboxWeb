@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2016/05/13 16:09:44.000.732,=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\UserSessionUnit.pas</Transaction>
+    <Transaction>2016/05/13 16:09:44.000.682,=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\ServerController.pas</Transaction>
+    <Transaction>2016/05/13 16:09:44.000.554,=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\Unit1.pas</Transaction>
+    <Transaction>2016/05/13 16:10:11.000.903,C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\CotizadorAirboxWeb.dproj=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\CotizadorAirboxWeb.dproj</Transaction>
+    <Transaction>2016/05/13 16:11:11.000.894,C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\CotizadorAirboxWeb.dproj=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\CotizadorAirboxWeb.dproj</Transaction>
+    <Transaction>2016/05/13 16:11:27.000.709,C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\Cotizador.dfm=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\Unit1.dfm</Transaction>
+    <Transaction>2016/05/13 16:11:27.000.709,C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\Cotizador.pas=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\Unit1.pas</Transaction>
+    <Transaction>2016/05/13 16:11:51.000.747,=C:\Disco Externo Rolando\Proyectos\Airbox Web\CotizadorAirboxWeb\TopFrame.pas</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Cotizador.pas"/>
+    <File Path="Cotizador.dfm"/>
+    <File Path="ServerController.pas"/>
+    <File Path="ServerController.dfm"/>
+    <File Path="TopFrame.pas"/>
+    <File Path="TopFrame.dfm"/>
+    <File Path="UserSessionUnit.pas"/>
+    <File Path="UserSessionUnit.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>
